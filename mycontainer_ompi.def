@@ -1,16 +1,21 @@
 Bootstrap: docker
 From: ubuntu:latest
- 
+
+# Commands Run on the host system.
+%setup
+
+# <source> <destination>
 %files
- 
+
+# For defining environment variables
+# Stored in the container metadata directory
+# Sourced when the container is run, not during build
 %environment
 LD_LIBRARY_PATH=/usr/local/lib
 export LD_LIBRARY_PATH=/usr/local/lib
- 
-%runscript
-   echo "This is what happens when you run the container..."
-   /usr/bin/ring-simple
- 
+
+# Executed in the container after the base OS is intalled
+# when the container is being built.
 %post
    echo "Hello from inside the container"
    apt-get -y update
@@ -31,6 +36,25 @@ export LD_LIBRARY_PATH=/usr/local/lib
    ls examples
    mpicc examples/ring_c.c -o /usr/bin/ring-simple
 
+# Executed whenever the container is run using `singularity run` or
+# directly executed from the image.
+%runscript
+   echo "This is what happens when you run the container..."
+   /usr/bin/ring-simple
+
+# Executed when the `instance start` command is issued.
+%startscript 
+
+# Runs at the very end of every build.
+# Can also be run using `singularity test`
+%test
+  grep -q NAME=\"Ubuntu\" /etc/os-release
+  if [ $? -eq 0 ]; then
+    echo "Container base is Ubuntu as expected."
+  else
+    echo "Container base is not Ubuntu."
+  fi
+
+# Used to add metadata
 %labels
   Author ayenpure
-
