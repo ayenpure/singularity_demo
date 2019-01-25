@@ -1,0 +1,14 @@
+1. Download and install singularity.
+  - Download and install all dependencies
+  - Download and install Go
+  - Most commands in the chapter are really old, need to update them.
+    use : https://www.sylabs.io/docs
+  - Download, build, and install Singularity
+
+2. Using  
+
+Make the singularity definition file for building a container.
+
+3. Create a container.
+
+4. Run the container. 
