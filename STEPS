@@ -1,14 +1,39 @@
-1. Download and install singularity.
-  - Download and install all dependencies
-  - Download and install Go
-  - Most commands in the chapter are really old, need to update them.
-    use : https://www.sylabs.io/docs
-  - Download, build, and install Singularity
+# Download and install singularity.
+# Most commands in the chapter are really old, need to update them.
+# use : https://www.sylabs.io/docs
 
-2. Using  
+# 1. Download and install basic dependencies
 
-Make the singularity definition file for building a container.
+sudo apt-get update && \
+sudo apt-get install -y build-essential \
+                        libssl-dev \
+                        uuid-dev \
+                        libgpgme11-dev \
+                        squashfs-tools
 
-3. Create a container.
+# 2. Download and install Go
+# The GOPATH environment variable is used to specify directories outside of 
+# $GOROOT that contain the source for Go projects and their binaries.
+# This tutorial does not need GOROOT.
 
-4. Run the container. 
+wget https://dl.google.com/go/go1.11.5.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.11.5.linux-amd64.tar.gz
+echo 'export GOPATH=${HOME}/go' >> ~/.bashrc
+echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc
+source ~/.bashrc
+
+# 3. Download, build, and install Singularity
+
+mkdir -p $GOPATH/src/github.com/sylabs
+cd $GOPATH/src/github.com/sylabs
+git clone https://github.com/sylabs/singularity.git
+cd singularity
+go get -u -v github.com/golang/dep/cmd/dep
+
+# Edit mconfig is you want to change the install prefix
+
+./mconfig
+make -C builddir
+sudo make -C builddir install
+
+# This concludes installation of Singularity
